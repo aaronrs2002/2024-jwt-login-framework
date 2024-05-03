@@ -135,7 +135,9 @@ if (sessionStorage.getItem("token") && checkedToken === false) {
 const toggleMobileNav = (whatSection) => {
     let prePopulated = ["settings", "contact", "logout", null];
     console.log("whatSection: " + whatSection)
-
+    if (whatSection) {
+        localStorage.setItem("activeModule", whatSection);
+    }
 
     if (prePopulated.indexOf(whatSection) === -1) {
 
