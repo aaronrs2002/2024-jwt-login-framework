@@ -6,7 +6,7 @@ const profile = [{
     companyWebsite: "https://web-presence.biz/",
     companyName: "Web-Presence LLC",
     companyAddress: "YOUR ADDRESS",
-    companyEmail: "YOUR@EMAIL.COM",
+    userEmail: "YOUR@EMAIL.COM",
     companyPhone: "555-555-5555",
     companyLogo: "https://web-presence.biz/img/MA_Logo.png",
     relay: "../endpoint/EmailRelay.php",
@@ -25,7 +25,7 @@ const profile = [{
         { link: "https://aaronrs2002.github.io/word-game/?" + gaParam + "&", name: "WordFun" }],
     content: [{
         title: "home",
-        text: "<div class='row'><div class='col-md-6'>Introducing the latest release of our JWT login framework, designed for seamless authentication in Node.js environments coupled with client-side simplicity using HTML and Vanilla JavaScript. This annual update brings enhanced security and efficiency to your web applications, leveraging the power of MySQL databases for robust data management. Whether you\'re a seasoned developer or just starting out, our framework empowers you to build secure, scalable login systems with ease. Upgrade now and unlock the full potential of your web projects!</div><div class='col-md-6'><iframe class='mediaFrame' src='https://www.youtube.com/embed/JadkyKLUo7U?&amp;rel=0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' frameborder='0' allowfullscreen='' mozallowfullscreen='mozallowfullscreen' msallowfullscreen='msallowfullscreen' oallowfullscreen='oallowfullscreen' webkitallowfullscreen='webkitallowfullscreen'></iframe></div></div>",
+        text: "<div class='row'><div class='col-md-6'>Introducing the latest release of our JWT login framework, designed for seamless authentication in Node.js environments coupled with client-side simplicity using HTML and Vanilla JavaScript. This annual update brings enhanced security and efficiency to your web applications, leveraging the power of MySQL databases for robust data management. Whether you\'re a seasoned developer or just starting out, our framework empowers you to build secure, scalable login systems with ease. Upgrade now and unlock the full potential of your web projects!</div><div class='col-md-6'><iframe class='mediaFrame' src='https://www.youtube.com/embed/_MzoPQ3B8RQ?&amp;rel=0' allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture' frameborder='0' allowfullscreen='' mozallowfullscreen='mozallowfullscreen' msallowfullscreen='msallowfullscreen' oallowfullscreen='oallowfullscreen' webkitallowfullscreen='webkitallowfullscreen'></iframe></div></div>",
     },
     {
         title: "about",
