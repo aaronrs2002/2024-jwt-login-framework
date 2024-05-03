@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en" data-module="login">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/brands.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/solid.css" rel="stylesheet" />
+    <!-- Bootstrap CSS-->
+    <link href="https://bootswatch.com/5/spacelab/bootstrap.css" rel="stylesheet" id="themedStyle">
+
+    <link rel="stylesheet" href="css/animate.min.css" />
+
+    <link href="css/style.css" rel="stylesheet">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="row row-cols-1 row-cols-md-3 mb-3 text-center d-flex justify-content-center my-5">
+            <div class="col mt-5">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3">
+                        <h4 class="my-0 fw-normal">Tutorial Login</h4>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div data-newUser="true">
+
+                            <input type="text" class="form-control" name="email" placeholder="Email" maxLength="75"
+                                onChange="onHandlePswdChange()" />
+                            <input type="password" class="form-control" name="password" placeholder="Password"
+                                maxLength="75" onChange="onHandlePswdChange()" />
+                            <button class="btn btn-block w-100 btn-success ckValidate hide"
+                                onClick="login()">Login</button>
+                            <i><a href="#" onClick="setNewUser(true)">Create New Account</a></i>
+                        </div>
+                        <div data-newUser="false" class="hide">
+                            <h2>Create Account</h2>
+
+                            <input type="text" class="form-control" name="newEmail" placeholder="Email" maxLength="75"
+                                onChange="onHandlePswdChange()" />
+                            <select class="form-control" name="level">
+                                <option value="employee">Employee</option>
+                                <option value="manager">Manager</option>
+                            </select>
+                            <input type="password" class="form-control" name="password1" placeholder="Password"
+                                maxLength="75" onChange="ckNewPassword()" />
+                            <input type="password" class="form-control" name="password2" placeholder="Password"
+                                maxLength="75" onChange="ckNewPassword()" />
+
+                            <button class="btn btn-block btn-success ckValidate hide" name="newUser"
+                                onClick="createUser()">Create User</button>
+
+                            <i><a href="#" onClick="setNewUser(false)">Already have an
+                                    account</a></i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+    </div>
+
+    <div class="hide alert fadeInUp" role="alert" id="globalAlert"></div>
+
+
+</body>
+
+
+<script src="config/profile.js"></script>
+<script src="js/sharedFunctionality.js"></script>
+<script src="js/login.js"></script>
+<script src="js/Validate.js"></script>
+
+</html>

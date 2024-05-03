@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en" data-module="home">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/brands.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/solid.css" rel="stylesheet" />
+
+
+
+    <link href="https://bootswatch.com/5/spacelab/bootstrap.css" rel="stylesheet" id="themedStyle">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/animate.min.css" />
+
+    <link href="css/style.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <title>Home</title>
+</head>
+
+<body>
+    <div class="hide alert fadeInDown" id="showAlert" role="alert"></div>
+
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark p-2">
+        <a class="navbar-brand badge text-bg-secondary userEmail" href="#">user</a>
+        <button class="navbar-toggler" onClick="toggleMobileNav(null)">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="mobileNav" class="collapse navbar-collapse">
+
+            <ul class="navbar-nav mr-auto"></ul>
+        </div>
+        <div class=" float-end desktopOnly"><img src="" class="img-fluid  companyLogo" /></div>
+    </nav>
+
+
+
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12 content " data-module="content">
+
+
+                <h1 id="contentTitle">Blam! YOU ARE HOME</h1>
+                <div>
+                    <p id="contentText"></p>
+                </div>
+            </div>
+
+
+            <div class="col-md-12 content hide" data-module="settings">
+                <h2>Change Password</h2>
+
+                <div class="form-group py-2">
+                    <input type="password" name="new-password" placeholder="New Password" class="form-control" />
+                    <div class="d-grid">
+
+                        <div class="alert alert-danger hide" role="alert" data-confirm="changePassword">
+                            <h5>Are you sure you want to change your password?</h5>
+                            <button class="btn btn-secondary" onClick="setConfirm('default')">No</button>
+                            <button class="btn btn-warning" onClick="changePassword()">Yes</button>
+                        </div>
+
+                        <button type="button" class="btn btn-block btn-danger" data-request="changePassword"
+                            onClick="setConfirm('changePassword')">Change Password</button>
+                    </div>
+                </div>
+
+                <hr />
+                <h2>Delete User</h2>
+
+
+
+
+
+
+
+                <div class="form-group py-2">
+                    <button class="btn btn-danger w-100 btn-block" data-request="deleteUser"
+                        onClick="setConfirm('deleteUser')">
+                        Delete User
+                    </button>
+
+                    <div class="alert alert-danger hide" role="alert" data-confirm="deleteUser">
+                        Are you sure you want to delete <span class="userEmail"></span>
+                        <button class="btn btn-block btn-danger" onClick="deleteUser()">Yes</button>
+                        <button class="btn btn-block btn-info" onClick="setConfirm('default')">No</button>
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+            <div class="col-md-12 content hide" data-module="contact">
+
+                <h2 class="companyName"></h2>
+                <form method="POST" id="portfolioContact" action="" onSubmit="javascript:runningProcess()">
+                    <div class="form-group block">
+                        <ul class="list-unstyled">
+                            <li> <input type="hidden" name="url" />
+                                <input type="text" name="legit" class="hide" onChange="javascript:onHandleChange()" />
+                                <input type="text" class="form-control" name="name" placeholder="Name" maxlength="50"
+                                    onChange="javascript:onHandleChange()" />
+                            </li>
+                            <li>
+                                <input type="email" class="form-control" name="email" maxlength="50" placeholder="Email"
+                                    onChange="javascript:onHandleChange()" />
+                            </li>
+                            <li>
+                                <input type="text" class="form-control" name="phone" maxlength="19" placeholder="Phone"
+                                    onChange="javascript:onHandleChange()" />
+                            </li>
+                            <li>
+                                <textarea class="form-control" row="10" name="message" maxlength="1000"
+                                    placeholder="Message" onChange="javascript:onHandleChange()"></textarea>
+                            </li>
+                            <button type="submit" disabled="" class="btn btn-primary form-control"
+                                disabled="true">Submit</button>
+                        </ul>
+                    </div>
+                </form>
+
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+    <div class="hide alert fadeInUp" role="alert" id="globalAlert"></div>
+    <footer class="footer mt-auto py-3 animated fadeInUp">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="btn-group block my-2" role="group" id="footerLinks"></div>
+                </div>
+                <div class="col-md-2 my-2"> <select class="form-control" onChange="changeTheme()" id="themes"></select>
+                </div>
+                <div class="col-md-4 my-2" id="socialMediaList">
+                </div>
+                <div class="col-md-2 my-3"><a href="" class="companyWebsite companyName" target="_blank"></a></div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+<script src="config/profile.js"></script>
+<script src="js/sharedFunctionality.js"></script>
+<script src="js/footer.js"></script>
+<script src="js/Validate.js"></script>
+
+</html>
