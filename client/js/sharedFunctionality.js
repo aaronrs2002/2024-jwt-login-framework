@@ -81,27 +81,29 @@ function setConfirm(confirmWhat) {
 }
 
 //CLIENT SIDE START LOG OUT
-async function logout() {
-    const response = await fetch(profile[0].serverUrl + "/logout-uuid", {
-        method: "PUT", // or 'PUT'
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ "email": sessionStorage.getItem("email"), "uuid": "logged-out" }),
-    });
-    const res = await response.json();
+
+const logout = () => {
     isValidUser = false;
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("token");
-    if (res.affectedRows === 1) {
-        globalAlert("alert-success", "Logout success!");
-        if (activeModule !== "login") {
-            window.location = "index.html";
-        }
-    } else {
-        globalAlert("alert-warning", "We cleared your info from session storage.");
-        window.location = "index.html";
-    }
-    return false;
-}
 
+    axios.put(profile[0].serverUrl + "/logout-uuid", {
+        email: userEmail,
+        uuid: "logged-out"
+    }, config).then(
+        (res) => {
+            if (res.affectedRows === 1) {
+                globalAlert("alert-success", "Logout success!");
+                if (activeModule !== "login") {
+                    window.location = "index.html";
+                }
+            } else {
+                globalAlert("alert-warning", "We cleared your info from session storage.");
+                window.location = "index.html";
+            }
+            return false;
+        }, (error) => {
+            globalAlert("alert-warning", "We cleared your info from session storage.");
+        })
+
+}
