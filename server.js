@@ -250,7 +250,7 @@ app.put("/change-password", checkToken, (req, res) => {
 //USER EDIT THEME START
 
 app.put("/edit-theme", checkToken, (req, res) => {
-    let sql = `UPDATE user SET theme = '${req.body.theme}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
+    let sql = `UPDATE user SET theme = '${req.body.theme.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
