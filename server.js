@@ -169,7 +169,7 @@ app.post("/login", (req, res) => {
 
 app.put("/logout-uuid", (req, res) => {
     let serverLogOut = req.body.uuid + ":" + uuid();
-    let sql = `UPDATE user SET token = '${serverLogOut}' WHERE email = "${req.body.email}"`;
+    let sql = `UPDATE user SET token = '${serverLogOut}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             res.send("Setting logout token failed. " + err);
@@ -184,7 +184,7 @@ app.put("/logout-uuid", (req, res) => {
 
 //START DELETE USER
 app.delete("/delete-user/:email", checkToken, (req, res) => {
-    let sql = "DELETE FROM user WHERE email = '" + req.params.email + "'";
+    let sql = "DELETE FROM user WHERE email = '" + req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '') + "'";
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -198,7 +198,7 @@ app.delete("/delete-user/:email", checkToken, (req, res) => {
 
 //START EDIT LEVEL 
 app.put("/edit-level", checkToken, (req, res) => {
-    let sql = `UPDATE user SET level = '${req.body.level}WHERE email = "${req.body.email}"`;
+    let sql = `UPDATE user SET level = '${req.body.level.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')} WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -211,7 +211,7 @@ app.put("/edit-level", checkToken, (req, res) => {
 
 //START GET LEVEL
 app.get("/level/:email", (req, res) => {
-    let sql = `SELECT level FROM user WHERE email = '${req.params.email}'`;
+    let sql = `SELECT level FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -223,7 +223,7 @@ app.get("/level/:email", (req, res) => {
 
 //START REFRESH
 app.get("/check-token/:email", checkToken, (req, res) => {
-    let sql = `SELECT token FROM user WHERE email = '${req.params.email}'`;
+    let sql = `SELECT token FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, results) => {
         if (err) {
             console.log("check for token: " + err);
@@ -239,7 +239,7 @@ app.put("/change-password", checkToken, (req, res) => {
     const body = req.body;
     const salt = genSaltSync(10);
     body.password = hashSync(body.password, salt);
-    let sql = `UPDATE user SET password = '${body.password}' WHERE email = '${body.email}'`;
+    let sql = `UPDATE user SET password = '${body.password}' WHERE email = '${body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -253,7 +253,7 @@ app.put("/change-password", checkToken, (req, res) => {
 //USER EDIT THEME START
 
 app.put("/edit-theme", checkToken, (req, res) => {
-    let sql = `UPDATE user SET theme = '${req.body.theme}' WHERE email = "${req.body.email}"`;
+    let sql = `UPDATE user SET theme = '${req.body.theme}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -268,7 +268,7 @@ app.put("/edit-theme", checkToken, (req, res) => {
 
 //START GET THEME
 app.get("/theme/:email", (req, res) => {
-    let sql = `SELECT theme FROM user WHERE email = '${req.params.email}'`;
+    let sql = `SELECT theme FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, results) => {
         if (err) {
             console.log(err);
