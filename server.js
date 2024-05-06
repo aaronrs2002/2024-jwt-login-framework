@@ -167,7 +167,7 @@ app.post("/login", (req, res) => {
 
 //START LOGOUT
 
-app.put("/logout-uuid", (req, res) => {
+app.put("/logout-uuid", checkToken, (req, res) => {
     let serverLogOut = req.body.uuid + ":" + uuid();
     let sql = `UPDATE user SET token = '${serverLogOut}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
     let query = db.query(sql, (err, result) => {
@@ -210,7 +210,7 @@ app.put("/edit-level", checkToken, (req, res) => {
 });
 
 //START GET LEVEL
-app.get("/level/:email", (req, res) => {
+app.get("/level/:email", checkToken, (req, res) => {
     let sql = `SELECT level FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, result) => {
         if (err) {
@@ -267,7 +267,7 @@ app.put("/edit-theme", checkToken, (req, res) => {
 //USER EDIT THEME END
 
 //START GET THEME
-app.get("/theme/:email", (req, res) => {
+app.get("/theme/:email", checkToken, (req, res) => {
     let sql = `SELECT theme FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, results) => {
         if (err) {
