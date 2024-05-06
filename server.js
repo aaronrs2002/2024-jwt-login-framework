@@ -165,7 +165,7 @@ app.post("/login", (req, res) => {
 //START LOGOUT
 
 app.put("/logout-uuid", checkToken, (req, res) => {
-    let serverLogOut = req.body.uuid + ":" + uuid();
+    let serverLogOut = req.body.uuid.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '') + ":" + uuid();
     let sql = `UPDATE user SET token = '${serverLogOut}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
     let query = db.query(sql, (err, result) => {
         if (err) {
