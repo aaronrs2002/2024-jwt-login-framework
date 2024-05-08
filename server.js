@@ -1,50 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mysql = require("mysql2");
-//const path = require("path");
+const path = require("path");
 const db = require("./config/db");
 const { checkToken } = require("./auth/token_validation");
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 const jwtKey = require("./config/jwt-key");
 
-
 const app = express();
-
-
-const cors = require('cors');
-const corsOptions = {
-    origin: 'http://localhost:3000',
-    credentials: true,
-    optionSuccessStatus: 200
-}
-app.use(cors(corsOptions));
-
-
-
-var randomize = function (base) {
-    var d, returnValue, r;
-
-    d = new Date().getTime();
-    returnValue = base.replace(/[xy]/g, function (c) {
-        r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-
-        return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
-    });
-
-    return returnValue;
-};
-/*
-* Creates a unique user id
-* @method uuid
-* @return {String} uuid A unique string in a uuid format
-*/
-var uuid = function uuid() {
-    return randomize('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx');
-};
-
-
 
 app.use(bodyParser.json());
 
@@ -52,9 +16,9 @@ app.use(bodyParser.json());
 //START CREATE USER
 const create = (data, callback) => {
     db.query(
-        `insert into user(email,level,password,theme)
-                      values(?,?,?,?)`,
-        [data.email, data.level, data.password, data.theme],
+        `insert into user(email,level,password)
+                      values(?,?,?)`,
+        [data.email, data.level, data.password],
         (error, results, fields) => {
             if (error) {
                 return callback(error);
@@ -97,10 +61,7 @@ const getUserByUserEmail = (email, callback) => {
             if (error) {
                 return callback(error);
             }
-            console.log("JSON.stringify(results[0]): " + JSON.stringify(results[0]));
             return callback(null, results[0]);
-
-
 
         }
     )
@@ -108,7 +69,7 @@ const getUserByUserEmail = (email, callback) => {
 
 app.post("/login", (req, res) => {
     const body = req.body;
-    getUserByUserEmail(body.email, (err, results) => {
+    getUserByUserEmail(body.email.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, ''), (err, results) => {
         if (err) {
             console.log(err);
             if (err === "ECONNRESET") {
@@ -135,13 +96,12 @@ app.post("/login", (req, res) => {
             );
 
             if (jsontoken) {
-                //  saveToken(jsontoken, body.email);
-                let sql = `UPDATE user SET token = '${jsontoken}' WHERE email = "${body.email}"`;
+                let sql = `UPDATE user SET token = '${jsontoken}' WHERE email = "${body.email.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '')}"`;
                 let query = db.query(sql, (err, result) => {
                     if (err) {
                         console.log("There was an error on the server side: " + err);
                     } else {
-                        console.log("That worked. here is the token result: " + JSON.stringify(result));
+                        console.log("Here is the token result: " + JSON.stringify(result));
                     }
                 });
                 console.log("trying to fire saved token.");
@@ -151,7 +111,7 @@ app.post("/login", (req, res) => {
                 success: 1,
                 message: "Login Successful",
                 token: jsontoken,
-                results
+                id: results.id,
             })
         } else {
             return res.json({
@@ -165,15 +125,13 @@ app.post("/login", (req, res) => {
 //START LOGOUT
 
 app.put("/logout-uuid", checkToken, (req, res) => {
-    let serverLogOut = req.body.uuid.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '') + ":" + uuid();
-    let sql = `UPDATE user SET token = '${serverLogOut}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
+    let sql = `UPDATE user SET token = '${req.body.uuid.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '')}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '')}"`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             res.send("Setting logout token failed. " + err);
         } else {
 
-            res.send(result);
-
+            res.send("logout uuid saved.");
         }
     })
 });
@@ -181,7 +139,7 @@ app.put("/logout-uuid", checkToken, (req, res) => {
 
 //START DELETE USER
 app.delete("/delete-user/:email", checkToken, (req, res) => {
-    let sql = "DELETE FROM user WHERE email = '" + req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '') + "'";
+    let sql = "DELETE FROM user WHERE email = '" + req.params.email.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '') + "'";
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -195,7 +153,7 @@ app.delete("/delete-user/:email", checkToken, (req, res) => {
 
 //START EDIT LEVEL 
 app.put("/edit-level", checkToken, (req, res) => {
-    let sql = `UPDATE user SET level = '${req.body.level.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')} WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
+    let sql = `UPDATE user SET level = '${req.body.level.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '')}WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '')}"`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -208,7 +166,7 @@ app.put("/edit-level", checkToken, (req, res) => {
 
 //START GET LEVEL
 app.get("/level/:email", checkToken, (req, res) => {
-    let sql = `SELECT level FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
+    let sql = `SELECT level FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -220,7 +178,8 @@ app.get("/level/:email", checkToken, (req, res) => {
 
 //START REFRESH
 app.get("/check-token/:email", checkToken, (req, res) => {
-    let sql = `SELECT token FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
+
+    let sql = `SELECT token FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, results) => {
         if (err) {
             console.log("check for token: " + err);
@@ -236,7 +195,7 @@ app.put("/change-password", checkToken, (req, res) => {
     const body = req.body;
     const salt = genSaltSync(10);
     body.password = hashSync(body.password, salt);
-    let sql = `UPDATE user SET password = '${body.password}' WHERE email = '${body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
+    let sql = `UPDATE user SET password = '${body.password}' WHERE email = '${body.email.replace(/[&\/\\#,+()$~%'"*?|<>{}“]/g, '')}'`;
     let query = db.query(sql, (err, result) => {
         if (err) {
             console.log(err);
@@ -247,40 +206,14 @@ app.put("/change-password", checkToken, (req, res) => {
     })
 
 });
-//USER EDIT THEME START
-
-app.put("/edit-theme", checkToken, (req, res) => {
-    let sql = `UPDATE user SET theme = '${req.body.theme.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}' WHERE email = "${req.body.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}"`;
-    let query = db.query(sql, (err, result) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(result);
-            res.send(result);
-        }
-    });
-});
-
-//USER EDIT THEME END
-
-//START GET THEME
-app.get("/theme/:email", checkToken, (req, res) => {
-    let sql = `SELECT theme FROM user WHERE email = '${req.params.email.replace(/[&\/\\#,+()$~%'"*?<>{}“]/g, '')}'`;
-    let query = db.query(sql, (err, results) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(results);
-        }
-    });
-});
-
-//END GET THEME
 
 
+///start api routes
+app.use("/api/purchaseLog/", require("./routes/api/purchaseLog"));
+app.use("/api/items/", require("./routes/api/items"));
+app.use("/api/reviews/", require("./routes/api/reviews"));
+app.use("/api/inventory/", require("./routes/api/inventory"));
 
-
-/*
 
 if (process.env.NODE_ENV === "production") {
     app.use(express.static("client/build"));
@@ -289,7 +222,7 @@ if (process.env.NODE_ENV === "production") {
         res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 
     });
-}*/
+}
 
 const PORT = process.env.PORT || 5000;
 
