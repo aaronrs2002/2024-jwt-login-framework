@@ -100,7 +100,6 @@ async function login() {
 
 
             if (res.results.theme) {
-                window.alert("JSON.stringify(res): " + res.results.theme)
                 localStorage.setItem("theme", res.results.theme);
 
             }
