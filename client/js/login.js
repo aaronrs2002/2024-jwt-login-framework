@@ -97,8 +97,11 @@ async function login() {
 
         if (res.success === 1) {
             globalAlert("alert-success", email + " logged in.");
-            if (res.theme) {
-                localStorage.setItem("theme", res.theme);
+
+
+            if (res.results.theme) {
+                window.alert("JSON.stringify(res): " + res.results.theme)
+                localStorage.setItem("theme", res.results.theme);
 
             }
             validateUser(res.success, res.token, email, "logged in");
