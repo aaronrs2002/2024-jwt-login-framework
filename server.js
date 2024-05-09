@@ -136,14 +136,17 @@ app.post("/login", (req, res) => {
 
             if (jsontoken) {
                 //  saveToken(jsontoken, body.email);
-                let sql = `UPDATE user SET token = '${jsontoken}' WHERE email = "${body.email}"`;
-                let query = db.query(sql, (err, result) => {
-                    if (err) {
-                        console.log("There was an error on the server side: " + err);
-                    } else {
-                        console.log("That worked. here is the token result: " + JSON.stringify(result));
-                    }
-                });
+                // let sql = `UPDATE user SET token = '${jsontoken}' WHERE email = "${body.email}"`;
+                let query = db.query(
+                    `UPDATE user SET token = ? WHERE email = ?`,
+                    [jsontoken, body.email],
+                    (err, result) => {
+                        if (err) {
+                            console.log("There was an error on the server side: " + err);
+                        } else {
+                            console.log("That worked. here is the token result: " + JSON.stringify(result));
+                        }
+                    });
                 console.log("trying to fire saved token.");
             }
 
